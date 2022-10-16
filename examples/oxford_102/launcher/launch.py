@@ -9,15 +9,16 @@ import ml_experiments
 import sys
 import luketils
 
+FLAGS = flags.FLAGS
+
 """
 Next, we define some config flags:
 """
 
 # TODO(lukewood): provide a default path for filepath
 
-flags.DEFINE_string("filepath", None, "the path to `run.py`.")
+flags.DEFINE_string("run", None, "the path to `run.py`.")
 flags.DEFINE_string("artifacts_dir", None, "the directory to save artifacts to.")
-flags.DEFINE_string("log_dir", None, "the directory to log tensorboard logs to.")
 
 FLAGS(sys.argv)
 
@@ -28,8 +29,8 @@ Finally, we define our experiment configs:
 config = ml_collections.ConfigDict()
 # initialize model types
 
-config.log_dir = FLAGS.log_dir
 config.artifacts_dir = FLAGS.artifacts_dir
+config.log_dir = f"{config.artifacts_dir}/logs"
 
 """
 Optionally these can include sweep values:

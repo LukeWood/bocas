@@ -6,7 +6,7 @@ Name: Quickstart
 With `ml-experiments` it is easy to write parameterized experiments, collect metrics
 from various parameterizations, and aggregate those metrics to produce plots.
 The goal of `ml-experiments` is to allow you to fully automate the process of running
-an experiment, producing an artifact such as a figure or chart, and including that 
+an experiment, producing an artifact such as a figure or chart, and including that
 artifact in your research paper.
 
 This tutorial will show you how to perform a sweep over two model architectures and
@@ -30,7 +30,7 @@ our experiment run.  This is all just python code, but its important to use some
 of unique identifier to distinguish your models.  This allows TensorBoard to function
 properly.
 
-I like to use information about the model in the name, so in this case the model name 
+I like to use information about the model in the name, so in this case the model name
 is:
 
 ```python
@@ -120,13 +120,12 @@ def prepare_dataset(ds, augmentation):
 
 
 """
-And define our entrypoint.  In `ml-experiments`, the entrypoint to a run is called 
+And define our entrypoint.  In `ml-experiments`, the entrypoint to a run is called
 `run()`.
 """
 
 
 def run(config):
-    config = ml_experiments.get_config()
     name = get_name(config)
 
     model = get_model(config.model_type)(
