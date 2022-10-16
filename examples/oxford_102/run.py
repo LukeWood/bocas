@@ -1,8 +1,8 @@
 """
 Name: Quickstart
-... other metadata
+"""
 
-
+"""
 With `ml-experiments` it is easy to write parameterized experiments, collect metrics
 from various parameterizations, and aggregate those metrics to produce plots.
 The goal of `ml-experiments` is to allow you to fully automate the process of running
