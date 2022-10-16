@@ -43,7 +43,7 @@ config.augmenter_type = ml_experiments.Sweep(["basic", "optimized"])
 Finally, we pick an entrypoint and run the experiment:
 """
 
-results = ml_experiments.run(FLAGS.filepath, config)
+results = ml_experiments.run(FLAGS.run, config)
 
 """
 After all results come back, we can aggregate and plot our metrics:

@@ -2,8 +2,7 @@ from ml_experiments.artifacts.artifact import Artifact
 
 
 class KerasHistory(Artifact):
-    """KerasHistory is used to return the keras `model.fit()` history.
-    """
+    """KerasHistory is used to return the keras `model.fit()` history."""
 
     def __init__(self, history, **kwargs):
         super().__init__(**kwargs)
