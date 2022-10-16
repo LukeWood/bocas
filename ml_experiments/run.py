@@ -42,7 +42,7 @@ def _iter_configs(config):
         result = static_keys.copy()
         for key, val in selection:
             result[key] = val
-        yield ml_collections.ConfigDict(intial_dictary=result)
+        yield ml_collections.ConfigDict(initial_dictionary=result)
 
 
 def run(path, config):
