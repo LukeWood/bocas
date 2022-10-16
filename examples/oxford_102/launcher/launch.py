@@ -52,7 +52,7 @@ After all results come back, we can aggregate and plot our metrics:
 metrics_to_plot = {}
 
 for experiment in results:
-    metrics = experiment.get("fit_history").metrics
+    metrics = experiment.get_artifact("fit_history").metrics
 
     metrics_to_plot[f"{experiment.name} Train"] = metrics["accuracy"]
     metrics_to_plot[f"{experiment.name} Validation"] = metrics["val_accuracy"]
