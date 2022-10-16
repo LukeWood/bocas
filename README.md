@@ -39,7 +39,10 @@ tactics to benchmark your novel tactic against.
 Typically, a research work will have many Tasks: where
 the overall goal of the paper is to benchmark a new Tactic's ability at solving a variety
 of tasks.
-As such, I recommend breaking your project down at the `Task` level, structuring your
+
+`ml-experiments` is structured around this idea: you will have at least one Task, and
+each Task may be solved by numerous tactics.
+As such, I recommend breaking your codebase down at the `Task` level, structuring your
 paper's artifact with splits made on the `Task` level.  For example, a classification
 paper might have the structure:
 
