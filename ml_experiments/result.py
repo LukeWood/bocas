@@ -33,6 +33,12 @@ class Result:
         self.name = name
         self.artifacts = artifacts or []
 
+    def get_artifact(self, name):
+        for artifact in self.artifacts:
+            if artifact.name == name:
+                return artifact
+        raise ValueError(f"Didn't find an artifact with name `name={name}`.")
+
 
 def _all_artifacts(artifacts):
     return all([isinstance(x, Artifact) for x in artifacts])

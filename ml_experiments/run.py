@@ -5,8 +5,8 @@ import itertools
 
 
 class DummyModule:
-    def run(self):
-        return ml_experiments.Result(name="testing-123", artifacts=[])
+    def run(self, config):
+        return Result(name="testing-123", artifacts=[])
 
 
 def _import_run_lib(path):
