@@ -22,7 +22,7 @@ from absl import flags
 import keras_cv
 import sys
 import luketils
-
+import tensorflow as tf
 
 """
 First, we define some functions to parse the config that `ml-experiments` will pass to
@@ -51,7 +51,7 @@ Next, we define a function to fetch a model constructor based on a config avlue:
 def get_model(model_type):
     if model_type == "resnet50":
         return keras_cv.models.ResNet50V2
-    if model_type == "efficientnet":
+    if model_type == "efficientnetv2":
         return keras_cv.models.EfficientNetV2Large
     raise ValueError(f"Unsupported model_type={model_type}")
 
@@ -63,9 +63,7 @@ and define some data augmentation pipelines to sweep over:
 
 def get_augmenter(augmenter_type):
     if augmenter_type == "eval":
-        return [
-            keras_cv.layers.Resizing(width=224, height=224, crop_to_aspect_ratio=True)
-        ]
+        return []
     if augmenter_type == "basic":
         return [
             keras_cv.layers.RandomFlip(),
@@ -88,14 +86,14 @@ def get_augmenter(augmenter_type):
 
 """
 After a run, you may wish to plot out a plot for that specific model.  This can be done
-by passing an `artifacts_dir` from your root config:
+by passing an `artifact_dir` from your root config:
 """
 
 
-def plot(metrics, name, artifacts_dir):
+def plot(metrics, name, artifact_dir):
     metrics = {"Train": metrics["accuracy"], "Validation": metrics["val_accuracy"]}
     luketils.visualization.line_plot(
-        data=metrics, path=f"{artifacts_dir}/{name}-accuracy.png"
+        data=metrics, path=f"{artifact_dir}/{name}-accuracy.png"
     )
 
 
@@ -105,13 +103,14 @@ Finally, we assemble our data preprocessing pipeline:
 
 
 def prepare_dataset(ds, augmentation):
-    augmentor = get_augmentor(augmentation)
+    augmentor = get_augmenter(augmentation)
 
+    resizing = keras.layers.Resizing(224, 224, crop_to_aspect_ratio=True)
     def preproc(x, y):
         inputs = {"images": x, "labels": y}
         for layer in augmentor:
             inputs = layer(inputs)
-        return inputs["images"], inputs["labels"]
+        return resizing(inputs["images"]), inputs["labels"]
 
     ds = ds.batch(64)
     ds = ds.map(preproc, num_parallel_calls=tf.data.AUTOTUNE)
@@ -134,10 +133,10 @@ def run(config):
 
     model.compile(loss="mse", optimizer="adam")
 
-    callbacks = [keras.callbacks.TensorBoard(logdir=config.log_dir)]
+    callbacks = [keras.callbacks.TensorBoard(config.log_dir)]
 
     train_ds, test_ds = tfds.load(
-        "oxford102", as_supervised=True, split=["train", "test"]
+        "oxford_flowers102", as_supervised=True, split=["train", "test"]
     )
     train_ds = prepare_dataset(train_ds, augmentation=config.augmenter_type)
     test_ds = prepare_dataset(test_ds, augmentation="eval")
@@ -146,7 +145,7 @@ def run(config):
     metrics = model.evaluate(test_ds, return_dict=True)
 
     train_metrics = history.history
-    plot(train_metrics, name, config.artifacts_dir)
+    plot(train_metrics, name, config.artifact_dir)
 
     return ml_experiments.Result(
         name=name,

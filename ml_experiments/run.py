@@ -2,18 +2,12 @@ from ml_experiments import Sweep
 from ml_experiments import Result
 import ml_collections
 import itertools
-
-
-class DummyModule:
-    def run(self, config):
-        return Result(name="testing-123", artifacts=[])
-
+import importlib
 
 def _import_run_lib(path):
-    # TODO(lukewood): some magic to import 'run' from `path`
-    module = DummyModule()
+    loader = importlib.machinery.SourceFileLoader("_run_task", path)
+    module = loader.load_module()
 
-    # TODO(lukewood): also inspect the arity of the function and raise value error
     if not hasattr(module, "run"):
         raise ValueError(
             "Expected the module specified in `path` to contain a "
@@ -28,7 +22,7 @@ def _iter_configs(config):
     dynamic_keys = {}
 
     for key in config:
-        if not isinstance(key, Sweep):
+        if not isinstance(config[key], Sweep):
             static_keys[key] = config[key]
             continue
 
@@ -36,7 +30,7 @@ def _iter_configs(config):
 
     selections = []
     for key in dynamic_keys:
-        selections.append([(key, val) for val in dynamic_keys[key]])
+        selections.append([(key, val) for val in dynamic_keys[key].items])
 
     for selection in itertools.product(*selections):
         result = static_keys.copy()
@@ -52,6 +46,7 @@ def run(path, config):
 
     results = []
     for config in _iter_configs(config_values):
+        print(config)
         # TODO(lukewood): Graceful error handling, allow specification of strategies
         # for error handling.
         result = module.run(config)

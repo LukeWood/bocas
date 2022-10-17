@@ -17,8 +17,11 @@ Next, we define some config flags:
 
 # TODO(lukewood): provide a default path for filepath
 
-flags.DEFINE_string("run", None, "the path to `run.py`.")
-flags.DEFINE_string("artifacts_dir", None, "the directory to save artifacts to.")
+flags.DEFINE_string("task", None, "the path to `run.py`.")
+flags.DEFINE_string("artifact_dir", None, "the directory to save artifacts to.")
+
+flags.mark_flag_as_required("task")
+flags.mark_flag_as_required("artifact_dir")
 
 FLAGS(sys.argv)
 
@@ -29,21 +32,21 @@ Finally, we define our experiment configs:
 config = ml_collections.ConfigDict()
 # initialize model types
 
-config.artifacts_dir = FLAGS.artifacts_dir
-config.log_dir = f"{config.artifacts_dir}/logs"
+config.artifact_dir = FLAGS.artifact_dir
+config.log_dir = f"{config.artifact_dir}/logs"
 
 """
 Optionally these can include sweep values:
 """
 
-config.model_type = ml_experiments.Sweep(["resnet", "efficientnet"])
+config.model_type = ml_experiments.Sweep(["resnet50", "efficientnetv2"])
 config.augmenter_type = ml_experiments.Sweep(["basic", "optimized"])
 
 """
 Finally, we pick an entrypoint and run the experiment:
 """
 
-results = ml_experiments.run(FLAGS.run, config)
+results = ml_experiments.run(FLAGS.task, config)
 
 """
 After all results come back, we can aggregate and plot our metrics:
@@ -59,7 +62,7 @@ for experiment in results:
 
 luketils.visualization.line_plot(
     metrics_to_plot,
-    path=f"{artifacts_dir}/combined-accuracy.png",
+    path=f"{artifact_dir}/combined-accuracy.png",
     title="Model Accuracy",
 )
 
