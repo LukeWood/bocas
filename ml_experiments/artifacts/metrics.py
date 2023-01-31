@@ -8,3 +8,6 @@ class Metrics(Artifact):
         super().__init__(**kwargs)
         # TODO(lukewood): override get item to return metrics item
         self.metrics = metrics
+
+    def as_dataframe_column(self, metrics):
+        raise NotImplementedError()

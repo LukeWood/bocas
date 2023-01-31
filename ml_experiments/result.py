@@ -1,4 +1,5 @@
 from ml_experiments.artifacts import Artifact
+import os
 
 
 class Result:
@@ -17,7 +18,7 @@ class Result:
 
     Args:
         name: string identifier for the experiment
-        artifacts: (Optiona) list of `ml_experiments.artifacts.Artifact` to be included in the
+        artifacts: (Optional) list of `ml_experiments.artifacts.Artifact` to be included in the
             result.
     """
 
@@ -38,6 +39,20 @@ class Result:
             if artifact.name == name:
                 return artifact
         raise ValueError(f"Didn't find an artifact with name `name={name}`.")
+
+    @staticmethod
+    def load_collection(path):
+        with open(path, 'rb') as f:
+            result = pickle.load(f)
+        return result
+
+    def serialize_to(self, artifacts_dir):
+        subdir = f"{artifacts_dir}/{self.name}"
+        os.makedirs(subdir, exist_ok=True)
+
+        # TODO(lukewood): pickle.load/dump/etc!
+        for artifact in self.artifacts:
+            artifact.serialize_to(subdir)
 
 
 def _all_artifacts(artifacts):
