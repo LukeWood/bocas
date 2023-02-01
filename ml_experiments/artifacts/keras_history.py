@@ -1,4 +1,5 @@
 from ml_experiments.artifacts.artifact import Artifact
+import pickle
 
 
 class KerasHistory(Artifact):
@@ -6,9 +7,9 @@ class KerasHistory(Artifact):
 
     def __init__(self, history, **kwargs):
         super().__init__(**kwargs)
-        self.history = history
+        self.history = history.history
 
     @property
     def metrics(self):
         """Returns a dictionary holding the metrics from `fit()`."""
-        return self.history.history
+        return self.history

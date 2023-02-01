@@ -3,6 +3,9 @@ from ml_experiments import Result
 import ml_collections
 import itertools
 import importlib
+import os
+import pickle
+
 
 def _import_run_lib(path):
     loader = importlib.machinery.SourceFileLoader("_run_task", path)
@@ -39,17 +42,34 @@ def _iter_configs(config):
         yield ml_collections.ConfigDict(initial_dictionary=result)
 
 
-def run(path, config):
+def run(path, config, artifact_dir="artifacts"):
     config_values = config.to_dict()
     # handle dynamic import
-    module = _import_run_lib(path)
+    if isinstance(path, str):
+        module = _import_run_lib(path)
+        run = module.run
+    else:
+        run = path
+
+    os.makedirs(artifact_dir, exist_ok=True)
 
     results = []
+    if "name" not in config:
+        raise ValueError(
+            "`config` must have a 'name' field.  Instead, got "
+            f"config.keys()={', '.join(list(config.keys()))}"
+        )
+
     for config in _iter_configs(config_values):
-        print(config)
         # TODO(lukewood): Graceful error handling, allow specification of strategies
         # for error handling.
-        result = module.run(config)
+        result = run(config)
+        result_dir = f"{artifact_dir}/{result.name}"
+        os.makedirs(result_dir, exist_ok=True)
+
+        with open(f"{result_dir}/results.p", "wb") as f:
+            pickle.dump(result, f)
+
         results.append(result)
 
     return results

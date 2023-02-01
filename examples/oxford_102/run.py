@@ -106,6 +106,7 @@ def prepare_dataset(ds, augmentation):
     augmentor = get_augmenter(augmentation)
 
     resizing = keras.layers.Resizing(224, 224, crop_to_aspect_ratio=True)
+
     def preproc(x, y):
         inputs = {"images": x, "labels": y}
         for layer in augmentor:
