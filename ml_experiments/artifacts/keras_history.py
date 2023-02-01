@@ -1,5 +1,6 @@
-from ml_experiments.artifacts.artifact import Artifact
 import pickle
+
+from ml_experiments.artifacts.artifact import Artifact
 
 
 class KerasHistory(Artifact):

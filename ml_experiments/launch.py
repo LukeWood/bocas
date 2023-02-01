@@ -1,8 +1,10 @@
-from absl import flags
-import ml_collections
-import ml_experiments
 import sys
+
+import ml_collections
+from absl import flags
 from ml_collections import config_flags
+
+import ml_experiments
 
 
 def launch():

@@ -15,14 +15,16 @@ classification dataset.  By the end of this guide, you will be able to modify th
 script, re-run the pipeline, and automatically re-render the `paper/` directory to
 include the updated tables and figures.
 """
-import ml_experiments
-import tensorflow_datasets as tfds
-from tensorflow import keras
-from absl import flags
-import keras_cv
 import sys
+
+import keras_cv
 import luketils
 import tensorflow as tf
+import tensorflow_datasets as tfds
+from absl import flags
+from tensorflow import keras
+
+import ml_experiments
 
 """
 First, we define some functions to parse the config that `ml-experiments` will pass to

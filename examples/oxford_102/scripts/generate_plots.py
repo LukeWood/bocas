@@ -1,6 +1,7 @@
-import ml_experiments
 import luketils
 import pandas as pd
+
+import ml_experiments
 
 results = ml_experiments.Result.load_collection("artifacts/")
 

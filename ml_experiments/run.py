@@ -1,10 +1,11 @@
-from ml_experiments import Sweep
-from ml_experiments import Result
-import ml_collections
-import itertools
 import importlib
+import itertools
 import os
 import pickle
+
+import ml_collections
+
+from ml_experiments import Result, Sweep
 
 
 def _import_run_lib(path):

@@ -1,16 +1,23 @@
 # ML Experiments
 
-*TODO(lukewood):* rename to keras-experiments
+*TODO(lukewood):* rename the package to something.
 
 *TODO(lukewood):* add PyPi badges, etc.
 
-Based on the `ml-collections` library, `ml-experiments` is an open source tool for
-orchestrating machine learning research experiments.
+`ml-experiments` is an opinionated open source framework for organizing,
+orchestrating, and ultimately publishing research experiments.
 
-`ml-experiments` allows you to define a configuration object in the style of
-`ml-collections` that describes an array of experiments, run all of the experiments,
-gather artifacts from the experiments, and aggregate the results into plots, tables,
-and figures for use in your research paper.
+Some design highlights of `ml-experiments` include:
+
+-  the ability to cache artifacts between experiment runs
+- the de-coupling of plot generation and training jobs
+-  `ml-experiments` augments the `ml-collections` library to allow you to describes an
+array of experiments in a single config
+- run all of the experiments with a single command
+- gather artifacts from the experiments
+- aggregate the results into plots, tables, and figures for use in your final report
+- easily combine results from multiple experiments
+- and more!
 
 ## Quick-Start
 
@@ -58,11 +65,13 @@ paper might have the structure:
 
 ### Code Structure
 
+`ml-experiments` provides an opinionated framework for generating
+
 Keeping these concepts in mind, `ml-experiments` recommends that you structure your code
 into three levels:
 
-- `library/` holds anything unique to your paper.  This might include a new
-  augmentation, a new `keras.Layer`, a new loss function, or even a new metric.
+- `library/` holds anything unique to your report/paper/publication.  This might include
+  a new augmentation, a new `keras.Layer`, a new loss function, or a new metric.
 - `tasks/` holds all of the tasks to benchmark your new technique on.
 - `paper/` holds the `Latex` or `Markdown` code required to render your paper
 - `paper/artifacts` subdirectory of `paper` that holds all of the artifacts produced by
@@ -97,23 +106,17 @@ def run(config):
             ml_experiments.artifacts.KerasHistory(history, name="fit_history"),
         ],
     )
-
-if __name__ == "__main__":
-    ml_experiments.run(main)
 ```
 
-Once you are happy with the results from a single `run.py` run, create a
-`launch.py` script.  `launch.py` is responsible for launching the sweep of all
-`run.py` runs as specified by the provided `ml_collections.ConfigDict` option:
+Once you are happy with the results from a single `run.py` run, create a `sweep.py`
+config file.  In `sweep.py`, specify a `ml_collections.ConfigDict` containing
+`ml_experiments.Sweep` objects for any value you'd like to sweep oer.
 
 ```python
 config = ml_collections.ConfigDict()
 
 config.static_value = 'any-string-or-int-or-float-or-python-object'
 config.optimizer = ml_experiments.Sweep(['sgd', 'adam'])
-
-results = ml_experiments.run('run.py', config)
-
 ```
 
 Anytime a value of type `ml_experiments.Sweep()` is encountered, the product of all
@@ -131,15 +134,23 @@ config.model = ml_experiments.Sweep(
 )
 ```
 
-This configuration already contains `15 * 2 * 4` or `120` runs!  That is way more than
-you'd like.  Try to define a few experiments that are all encompassing.  To accomplish
-this, run hyper parameter sweeps separately, and hardcode the values into the final runs
-that are used to produce the charts.
+This configuration already contains `15 * 2 * 4` or `120` runs!  That is probably
+way more than you'd like.  Try to define a few experiments that are all encompassing.
+To accomplish this, run hyper parameter sweeps separately, and hardcode the values into
+the final runs that are used to produce the charts.
 
 After all of your runs are complete, create some charts and plots.  Save them to your
-designated `artifacts_dir` so that they are rendered into your paper:
+designated directory in your `paper/` directory so that they are rendered
+into your updated paper.
+
+I recommend writing a script to produce desired plots based on the artifacts that can
+be run entirely separately from your experiments themselves.  Any example of this can
+be found in the `oxford_102` example:
 
 ```python
+# scripts/create_plots.py
+results = ml_experiments.Result.load_collection("artifacts/")
+
 metrics_to_plot = {}
 
 for experiment in results:
@@ -150,12 +161,12 @@ for experiment in results:
 
 luketils.visualization.line_plot(
     metrics_to_plot,
-    path=f"{artifacts_dir}/combined-accuracy.png",
+    path=f"{paper_dir}/results/combined-accuracy.png",
     title="Model Accuracy",
 )
 ```
 
-[This is seen in the oxford_102 example.](examples/oxford_102/)
+[Check out the full code in oxford_102.](examples/oxford_102/)
 
 ### Conclusions & Further Reading
 

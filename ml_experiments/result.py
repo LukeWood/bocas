@@ -1,7 +1,8 @@
-from ml_experiments.artifacts import Artifact
-import os
 import glob
+import os
 import pickle
+
+from ml_experiments.artifacts import Artifact
 
 
 class Result:
