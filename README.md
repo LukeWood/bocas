@@ -1,5 +1,7 @@
 # ML Experiments
 
+*TODO(lukewood):* rename to keras-experiments
+
 *TODO(lukewood):* add PyPi badges, etc.
 
 Based on the `ml-collections` library, `ml-experiments` is an open source tool for
