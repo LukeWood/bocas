@@ -5,3 +5,7 @@ models on the Oxford Flowers 102 dataset, generate plots, charts, and tables fro
 results  of the four experiments, and render those experiments into a pandoc style markdown
 project.  The process for a `Latex` project is identical - but does require some more
 use of the `\input{}` command sequence.
+
+```
+-m ml_experiments.launch --config config.py --task run.py
+```
