@@ -63,7 +63,7 @@ def run(path, config, artifact_dir="artifacts"):
         # TODO(lukewood): Graceful error handling, allow specification of strategies
         # for error handling.
         result = run(config)
-        result_dir = f'{artifacts_dir}/{result.name}'
+        result_dir = f'{artifact_dir}/{result.name}'
         os.makedirs(result_dir, exist_ok=True)
 
         with open(f'{result_dir}/results.p', 'wb') as f:
