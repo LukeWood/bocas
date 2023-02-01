@@ -3,6 +3,7 @@ import os
 import glob
 import pickle
 
+
 class Result:
     """Result contains the result of an experiment.
 
@@ -39,13 +40,15 @@ class Result:
         for artifact in self.artifacts:
             if artifact.name == name:
                 return artifact
-        raise ValueError(f"Didn't find an artifact with name `name={name}`. "
-        "Instead, found artifacts with the following names: "
-        f"[{', '.join([a.name for a in self.artifacts])}]")
+        raise ValueError(
+            f"Didn't find an artifact with name `name={name}`. "
+            "Instead, found artifacts with the following names: "
+            f"[{', '.join([a.name for a in self.artifacts])}]"
+        )
 
     @staticmethod
     def load(path):
-        with open(f'{path}/results.p', "rb") as f:
+        with open(f"{path}/results.p", "rb") as f:
             result = pickle.load(f)
         return result
 
