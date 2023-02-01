@@ -1,9 +1,9 @@
 import luketils
 import pandas as pd
 
-import ml_experiments
+import bocas
 
-results = ml_experiments.Result.load_collection("artifacts/")
+results = bocas.Result.load_collection("artifacts/")
 
 metrics_to_plot = {}
 

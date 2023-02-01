@@ -1,4 +1,4 @@
-from ml_experiments.artifacts.artifact import Artifact
+from bocas.artifacts.artifact import Artifact
 
 
 class Metrics(Artifact):

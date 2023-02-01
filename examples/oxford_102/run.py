@@ -3,9 +3,9 @@ Name: Quickstart
 """
 
 """
-With `ml-experiments` it is easy to write parameterized experiments, collect metrics
+With `bocas` it is easy to write parameterized experiments, collect metrics
 from various parameterizations, and aggregate those metrics to produce plots.
-The goal of `ml-experiments` is to allow you to fully automate the process of running
+The goal of `bocas` is to allow you to fully automate the process of running
 an experiment, producing an artifact such as a figure or chart, and including that
 artifact in your research paper.
 
@@ -24,10 +24,10 @@ import tensorflow_datasets as tfds
 from absl import flags
 from tensorflow import keras
 
-import ml_experiments
+import bocas
 
 """
-First, we define some functions to parse the config that `ml-experiments` will pass to
+First, we define some functions to parse the config that `bocas` will pass to
 our experiment run.  This is all just python code, but its important to use some sort
 of unique identifier to distinguish your models.  This allows TensorBoard to function
 properly.
@@ -122,7 +122,7 @@ def prepare_dataset(ds, augmentation):
 
 
 """
-And define our entrypoint.  In `ml-experiments`, the entrypoint to a run is called
+And define our entrypoint.  In `bocas`, the entrypoint to a run is called
 `run()`.
 """
 
@@ -150,21 +150,21 @@ def run(config):
     train_metrics = history.history
     plot(train_metrics, name, config.artifact_dir)
 
-    return ml_experiments.Result(
+    return bocas.Result(
         name=name,
         artifacts=[
-            ml_experiments.artifacts.KerasHistory(history, name="fit_history"),
-            ml_experiments.artifacts.Metrics(metrics, name="eval_metrics"),
+            bocas.artifacts.KerasHistory(history, name="fit_history"),
+            bocas.artifacts.Metrics(metrics, name="eval_metrics"),
         ],
     )
 
 
 """
-`ml-experiments` supports standalone runs as well.  Simply write the following code:
+`bocas` supports standalone runs as well.  Simply write the following code:
 
 ```python
 if __name__ == "__main__":
-    ml_experiments.run(main)
+    bocas.run(main)
 ```
 
 and whatever path is passed to `--config` from the command line will be parsed by the

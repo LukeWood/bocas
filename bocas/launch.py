@@ -4,7 +4,7 @@ import ml_collections
 from absl import flags
 from ml_collections import config_flags
 
-import ml_experiments
+import bocas
 
 
 def launch():
@@ -17,7 +17,7 @@ def launch():
     flags.mark_flag_as_required("config")
 
     FLAGS(sys.argv)
-    ml_experiments.run(FLAGS.task, FLAGS.config)
+    bocas.run(FLAGS.task, FLAGS.config)
 
 
 if __name__ == "__main__":

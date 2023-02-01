@@ -2,7 +2,7 @@ import glob
 import os
 import pickle
 
-from ml_experiments.artifacts import Artifact
+from bocas.artifacts import Artifact
 
 
 class Result:
@@ -10,18 +10,18 @@ class Result:
 
     Usage:
     ```python
-    return ml_experiments.Result(
+    return bocas.Result(
         name='testing-123',
         artifacts=[
-            ml_experiments.artifacts.KerasHistory(history, name="fit_history"),
-            ml_experiments.artifacts.Metrics(metrics, name="eval_metrics"),
+            bocas.artifacts.KerasHistory(history, name="fit_history"),
+            bocas.artifacts.Metrics(metrics, name="eval_metrics"),
         ],
     )
     ```
 
     Args:
         name: string identifier for the experiment
-        artifacts: (Optional) list of `ml_experiments.artifacts.Artifact` to be included in the
+        artifacts: (Optional) list of `bocas.artifacts.Artifact` to be included in the
             result.
     """
 
@@ -29,7 +29,7 @@ class Result:
         if not _all_artifacts(artifacts):
             raise ValueError(
                 "Expected all of `artifacts` to be subclasses of "
-                "`ml_experiments.artifacts.Artifact`.  Instead, got "
+                "`bocas.artifacts.Artifact`.  Instead, got "
                 f"artifacts={artifacts}."
             )
         if not isinstance(name, str):

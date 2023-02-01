@@ -20,14 +20,14 @@ def get_version(rel_path):
 
 
 setup(
-    name="ml-experiments",
-    version=get_version("ml_experiments/__init__.py"),
+    name="bocas",
+    version=get_version("bocas/__init__.py"),
     description="",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
     author="Luke Wood",
     author_email="lukewoodcs@gmail.com",
-    url="https://github.com/lukewood/ml-experiments",
+    url="https://github.com/lukewood/bocas",
     license="Apache License 2.0",
     install_requires=["ml-collections"],
     extras_require={
@@ -40,7 +40,7 @@ setup(
             "wheel",
         ],
     },
-    entrypoints={"launch": ["launch = ml_experiments.launch.launch"]},
+    entrypoints={"launch": ["launch = bocas.launch.launch"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",

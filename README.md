@@ -1,17 +1,18 @@
-# ML Experiments
+# Bocas
 
-*TODO(lukewood):* rename the package to something.
+![Downloads](https://img.shields.io/pypi/dm/bocas.svg)
+![Python](https://img.shields.io/badge/python-v3.7.0+-success.svg)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/lukewood/bocas/issues)
 
-*TODO(lukewood):* add PyPi badges, etc.
 
-`ml-experiments` is an opinionated open source framework for organizing,
+`bocas` is an opinionated open source framework for organizing,
 orchestrating, and ultimately publishing research experiments.
 
-Some design highlights of `ml-experiments` include:
+Some design highlights of `bocas` include:
 
 -  the ability to cache artifacts between experiment runs
 - the de-coupling of plot generation and training jobs
--  `ml-experiments` augments the `ml-collections` library to allow you to describes an
+-  `bocas` augments the `ml-collections` library to allow you to describes an
 array of experiments in a single config
 - run all of the experiments with a single command
 - gather artifacts from the experiments
@@ -27,7 +28,7 @@ array of experiments in a single config
 
 ## Overview
 
-Using `ml-experiments` is easy!  
+Using `bocas` is easy!  
 To get started, you need to be familiar with a few concepts.
 This overview covers everything you need to know.
 
@@ -35,7 +36,7 @@ This overview covers everything you need to know.
 
 ### Tasks & Tactics
 
-In the mental model of `ml-experiments` there exists *Tasks* and *Tactics*.  A *Task* is
+In the mental model of `bocas` there exists *Tasks* and *Tactics*.  A *Task* is
 something like: "classify images from MNIST", or "cluster samples into N classes", or
 "perform generative learning in X style".  
 
@@ -49,7 +50,7 @@ Typically, a research work will have many Tasks: where
 the overall goal of the paper is to benchmark a new Tactic's ability at solving a variety
 of tasks.
 
-`ml-experiments` is structured around this idea: you will have at least one Task, and
+`bocas` is structured around this idea: you will have at least one Task, and
 each Task may be solved by numerous tactics.
 As such, I recommend breaking your codebase down at the `Task` level, structuring your
 paper's artifact with splits made on the `Task` level.  For example, a classification
@@ -65,9 +66,9 @@ paper might have the structure:
 
 ### Code Structure
 
-`ml-experiments` provides an opinionated framework for generating
+`bocas` provides an opinionated framework for generating
 
-Keeping these concepts in mind, `ml-experiments` recommends that you structure your code
+Keeping these concepts in mind, `bocas` recommends that you structure your code
 into three levels:
 
 - `library/` holds anything unique to your report/paper/publication.  This might include
@@ -100,36 +101,36 @@ def run(config):
     model.compile(loss="mse", optimizer=config.optimizer)
     history = model.fit(train_ds, epochs=10)
 
-    return ml_experiments.Result(
+    return bocas.Result(
         name=name,
         artifacts=[
-            ml_experiments.artifacts.KerasHistory(history, name="fit_history"),
+            bocas.artifacts.KerasHistory(history, name="fit_history"),
         ],
     )
 ```
 
 Once you are happy with the results from a single `run.py` run, create a `sweep.py`
 config file.  In `sweep.py`, specify a `ml_collections.ConfigDict` containing
-`ml_experiments.Sweep` objects for any value you'd like to sweep oer.
+`bocas.Sweep` objects for any value you'd like to sweep oer.
 
 ```python
 config = ml_collections.ConfigDict()
 
 config.static_value = 'any-string-or-int-or-float-or-python-object'
-config.optimizer = ml_experiments.Sweep(['sgd', 'adam'])
+config.optimizer = bocas.Sweep(['sgd', 'adam'])
 ```
 
-Anytime a value of type `ml_experiments.Sweep()` is encountered, the product of all
-other defined `ml_experiments.Sweep()` parameters is run with the addition of the new
+Anytime a value of type `bocas.Sweep()` is encountered, the product of all
+other defined `bocas.Sweep()` parameters is run with the addition of the new
 values in that sweep.  
 
 Be careful with this!  It is easy to create a lot of experiments:
 
 ```python
 config = ml_collections.ConfigDict()
-config.learning_rate = ml_experiments.Sweep([x/100 for x in range(5, 21)])
-config.optimizer = ml_experiments.Sweep(['sgd', 'adam'])
-config.model = ml_experiments.Sweep(
+config.learning_rate = bocas.Sweep([x/100 for x in range(5, 21)])
+config.optimizer = bocas.Sweep(['sgd', 'adam'])
+config.model = bocas.Sweep(
   ['resnet50', 'resnet50v2', 'densenet101', 'efficientnet']
 )
 ```
@@ -149,7 +150,7 @@ be found in the `oxford_102` example:
 
 ```python
 # scripts/create_plots.py
-results = ml_experiments.Result.load_collection("artifacts/")
+results = bocas.Result.load_collection("artifacts/")
 
 metrics_to_plot = {}
 
@@ -170,15 +171,15 @@ luketils.visualization.line_plot(
 
 ### Conclusions & Further Reading
 
-Thats all it takes to get running with `ml-experiments`.  Please check out the
+Thats all it takes to get running with `bocas`.  Please check out the
 [`examples/`](examples/) directory for more reading.  It contains a few more patterns
 that might be useful in structuring your experiments.
 
 ## Limitiations
 
-:warning: right now `ml-experiments` is under active development :warning:
+:warning: right now `bocas` is under active development :warning:
 
-While the API is relatively straightforward and simple, `ml-experiments`
+While the API is relatively straightforward and simple, `bocas`
 lacks support for multi-worker experiment runs.  This means that you will need to run
 all of your experiments concurrently on a single machine.  If you are running 10-20
 `fit()` loops to convergence, this will likely be an extremely expensive process.
@@ -194,12 +195,12 @@ If someone wants to contribute distributed runs, feel free!
 
 ## Contributing
 
-Contributions are more than welcome to `ml-experiments`.  
+Contributions are more than welcome to `bocas`.  
 Please see the GitHub issue tracker, and feel free to pick up any issue annotated
-with [Contribution Welcome](TODO).
+with [Contribution Welcome](https://github.com/lukewood/bocas/issues).
 
 Additionally, bug reports are not only welcome but encouraged.  
-Help me improve `ml-experiments`!  
+Help me improve `bocas`!  
 I made this project because I needed the tool.
 I'm sure many others do as well.
 
@@ -209,4 +210,6 @@ If you find this tool helpful, please toss a GitHub star on the repo and follow 
 
 Thank you to all of our GitHub contributors:
 
-*TODO(lukewood):* include GitHub contributors link
+<a href="https://github.com/lukewood/bocas/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=lukewood/bocas" />
+</a>
