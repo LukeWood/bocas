@@ -41,11 +41,7 @@ setup(
             "wheel",
         ],
     },
-    entrypoints = {
-    'launch': [
-        'launch = ml_experiments.launch.launch'
-    ]
-    }
+    entrypoints={"launch": ["launch = ml_experiments.launch.launch"]},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",

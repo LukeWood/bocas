@@ -17,5 +17,6 @@ def launch():
     FLAGS(sys.argv)
     ml_experiments.run(FLAGS.task, FLAGS.config)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     launch()

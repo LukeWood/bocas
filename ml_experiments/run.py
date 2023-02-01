@@ -6,6 +6,7 @@ import importlib
 import os
 import pickle
 
+
 def _import_run_lib(path):
     loader = importlib.machinery.SourceFileLoader("_run_task", path)
     module = loader.load_module()
@@ -63,10 +64,10 @@ def run(path, config, artifact_dir="artifacts"):
         # TODO(lukewood): Graceful error handling, allow specification of strategies
         # for error handling.
         result = run(config)
-        result_dir = f'{artifact_dir}/{result.name}'
+        result_dir = f"{artifact_dir}/{result.name}"
         os.makedirs(result_dir, exist_ok=True)
 
-        with open(f'{result_dir}/results.p', 'wb') as f:
+        with open(f"{result_dir}/results.p", "wb") as f:
             pickle.dump(result, f)
 
         results.append(result)

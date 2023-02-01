@@ -1,6 +1,7 @@
 from ml_experiments.artifacts import Artifact
 import os
 import glob
+import pickle
 
 class Result:
     """Result contains the result of an experiment.
@@ -34,21 +35,23 @@ class Result:
         self.name = name
         self.artifacts = artifacts or []
 
-    def get_artifact(self, name):
+    def get(self, name):
         for artifact in self.artifacts:
             if artifact.name == name:
                 return artifact
-        raise ValueError(f"Didn't find an artifact with name `name={name}`.")
+        raise ValueError(f"Didn't find an artifact with name `name={name}`. "
+        "Instead, found artifacts with the following names: "
+        f"[{', '.join([a.name for a in self.artifacts])}]")
 
     @staticmethod
     def load(path):
-        with open(path, 'rb') as f:
+        with open(f'{path}/results.p', "rb") as f:
             result = pickle.load(f)
         return result
 
     @staticmethod
     def load_collection(path):
-        return [Result.load(path) for path in glob.glob(f'{path}/*')]
+        return [Result.load(path) for path in glob.glob(f"{path}/*")]
 
     def serialize_to(self, artifacts_dir):
         subdir = f"{artifacts_dir}/{self.name}"
