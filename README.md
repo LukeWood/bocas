@@ -175,7 +175,7 @@ Thats all it takes to get running with `bocas`.  Please check out the
 [`examples/`](examples/) directory for more reading.  It contains a few more patterns
 that might be useful in structuring your experiments.
 
-## Limitiations
+## Limitations
 
 :warning: right now `bocas` is under active development :warning:
 
