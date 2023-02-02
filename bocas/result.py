@@ -23,9 +23,11 @@ class Result:
         name: string identifier for the experiment
         artifacts: (Optional) list of `bocas.artifacts.Artifact` to be included in the
             result.
+        optional: (Optional) `ml_collections.ConfigDict` to be included in the
+            result.
     """
 
-    def __init__(self, name, artifacts=None):
+    def __init__(self, name, artifacts=None, config=None):
         if not _all_artifacts(artifacts):
             raise ValueError(
                 "Expected all of `artifacts` to be subclasses of "
@@ -36,6 +38,7 @@ class Result:
             raise ValueError(f"Expected `name` to be a string, instead got name={name}")
         self.name = name
         self.artifacts = artifacts or []
+        self.config = config
 
     def get(self, name):
         for artifact in self.artifacts:
