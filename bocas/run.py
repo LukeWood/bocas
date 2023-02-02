@@ -5,7 +5,8 @@ import pickle
 
 import ml_collections
 
-from bocas import Result, Sweep
+from bocas.result import Result
+from bocas.sweep import Sweep
 
 
 def _import_run_lib(path):

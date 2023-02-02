@@ -6,7 +6,6 @@ from ml_collections import config_flags
 
 import bocas
 
-
 def launch():
     FLAGS = flags.FLAGS
 
