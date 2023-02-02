@@ -1,1 +1,1 @@
-![OD Benchmarks](https://github.com/LukeWood/OD-Benchmarks)
+[OD Benchmarks](https://github.com/LukeWood/OD-Benchmarks)
