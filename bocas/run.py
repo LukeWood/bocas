@@ -56,11 +56,6 @@ def run(path, config, artifact_dir="artifacts"):
     os.makedirs(artifact_dir, exist_ok=True)
 
     results = []
-    if "name" not in config:
-        raise ValueError(
-            "`config` must have a 'name' field.  Instead, got "
-            f"config.keys()={', '.join(list(config.keys()))}"
-        )
 
     for config in _iter_configs(config_values):
         # TODO(lukewood): Graceful error handling, allow specification of strategies

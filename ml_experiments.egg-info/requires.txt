@@ -1,0 +1,9 @@
+ml-collections
+
+[dev]
+flake8
+pytest
+pytype
+setuptools
+twine
+wheel
