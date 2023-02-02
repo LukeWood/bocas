@@ -66,7 +66,11 @@ def run(path, config, artifact_dir="artifacts"):
         # TODO(lukewood): Graceful error handling, allow specification of strategies
         # for error handling.
         result = run(config)
-
+        if result is None:
+            raise ValueError(
+                "`result` returned from `run()` was `None`. "
+                "Did you forget a return statement?"
+            )
         if result.config is None:
             result.config = config
 
