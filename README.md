@@ -22,9 +22,9 @@ array of experiments in a single config
 
 ## Quick-Start
 
-- [Oxford 102 flowers classification example](examples/oxford_102/)
+- [Basic: Oxford 102 flowers classification example](examples/oxford_102/)
+- [Intermediate: Object detection benchmarks with KerasCV](https://github.com/LukeWood/OD-Benchmarks)
 - [Overview](#Overview)
-- *(TODO) API documentation*
 
 ## Overview
 
