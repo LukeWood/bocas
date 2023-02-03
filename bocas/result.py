@@ -1,4 +1,5 @@
 import glob
+from termcolor import colored, cprint
 import os
 import pickle
 
@@ -58,7 +59,16 @@ class Result:
 
     @staticmethod
     def load_collection(path):
-        return [Result.load(path) for path in glob.glob(f"{path}/*")]
+        results = []
+        for path in glob.glob(f"{path}/*"):
+            try:
+                r = Result.load(path)
+                results.append(r)
+            except Exception as e:
+                cprint(colored("Error loading result:", "red", attrs=["bold"]) + ' ' + path)
+                print(e)
+                pass
+        return results
 
     def serialize_to(self, artifacts_dir):
         subdir = f"{artifacts_dir}/{self.name}"
