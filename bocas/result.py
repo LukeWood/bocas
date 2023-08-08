@@ -24,7 +24,7 @@ class Result:
         name: string identifier for the experiment
         artifacts: (Optional) list of `bocas.artifacts.Artifact` to be included in the
             result.
-        optional: (Optional) `ml_collections.ConfigDict` to be included in the
+        config: (Optional) `ml_collections.ConfigDict` to be included in the
             result.
     """
 
