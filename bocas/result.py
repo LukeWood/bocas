@@ -2,8 +2,14 @@ import glob
 from termcolor import colored, cprint
 import os
 import pickle
-
+import yaml
 from bocas.artifacts import Artifact
+
+from .yamlify import (
+    configure_custom_yaml,
+)
+
+configure_custom_yaml()
 
 
 class Result:
@@ -53,30 +59,67 @@ class Result:
 
     @staticmethod
     def load(path):
-        with open(f"{path}/results.p", "rb") as f:
-            result = pickle.load(f)
+        # Maintain backwards compatibility with pickled results
+        if os.path.exists(f"{path}results.p"):
+            with open(f"{path}results.p", "rb") as f:
+                result = pickle.load(f)
+        elif os.path.exists(f"{path}results.yaml"):
+            with open(f"{path}results.yaml", "r") as f:
+                result = yaml.load(f, Loader=yaml.FullLoader)
+
         return result
 
     @staticmethod
     def load_collection(path):
         results = []
-        for path in glob.glob(f"{path}/*"):
+        for path in glob.glob(f"{path}/*/"):
             try:
                 r = Result.load(path)
                 results.append(r)
             except Exception as e:
-                cprint(colored("Error loading result:", "red", attrs=["bold"]) + ' ' + path)
+                cprint(
+                    colored("Error loading result:", "red", attrs=["bold"]) + " " + path
+                )
                 print(e)
                 pass
         return results
 
-    def serialize_to(self, artifacts_dir):
-        subdir = f"{artifacts_dir}/{self.name}"
-        os.makedirs(subdir, exist_ok=True)
+    def to_yaml(self):
+        yaml_dict = {
+            "name": self.name,
+            "artifacts": self.artifacts,
+            "config": self.config,
+        }
+        return yaml_dict
 
-        # TODO(lukewood): pickle.load/dump/etc!
-        for artifact in self.artifacts:
-            artifact.serialize_to(subdir)
+    @classmethod
+    def from_yaml(cls, loader, node):
+        for key_node, value_node in node.value:
+            if key_node.value == "config":
+                config = loader.construct_object(value_node)
+            elif key_node.value == "name":
+                name = loader.construct_scalar(value_node)
+            elif key_node.value == "artifacts":
+                artifacts = [
+                    loader.construct_object(art_node) for art_node in value_node.value
+                ]
+            else:
+                raise ValueError(f"Key {key_node.value} not recognized")
+
+        return cls(name, artifacts, config)
+
+
+# Configure yaml for Result
+def result_representer(dumper, data):
+    return dumper.represent_mapping("!Result", data.to_yaml())
+
+
+def result_constructor(loader, node):
+    return Result.from_yaml(loader, node)
+
+
+yaml.add_representer(Result, result_representer)
+yaml.add_constructor("!Result", result_constructor)
 
 
 def _all_artifacts(artifacts):

@@ -2,10 +2,11 @@ import importlib
 import itertools
 import os
 import pickle
+import yaml
+from termcolor import cprint
 
 import ml_collections
 
-from bocas.result import Result
 from bocas.sweep import Sweep
 
 
@@ -72,8 +73,21 @@ def run(path, config, artifact_dir="artifacts"):
         result_dir = f"{artifact_dir}/{result.name}"
         os.makedirs(result_dir, exist_ok=True)
 
-        with open(f"{result_dir}/results.p", "wb") as f:
-            pickle.dump(result, f)
+        try:
+            # Dump results to yaml
+            serialized_result = yaml.dump(result, default_flow_style=False)
+        except Exception as e:
+            cprint(f"YAML serialization failed with error: {e}.", "red")
+            serialized_result = None
+
+        if serialized_result:
+            with open(f"{result_dir}/results.yaml", "w") as f:
+                f.write(serialized_result)
+        # If dumping to yaml fails, default to pickling
+        else:
+            cprint("Defaulting to saving result as pickle.", "red")
+            with open(f"{result_dir}/results.p", "wb") as f:
+                pickle.dump(result, f)
 
         results.append(result)
 
