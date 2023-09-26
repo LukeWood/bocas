@@ -1,5 +1,5 @@
 from bocas.artifacts.artifact import Artifact
-from .yaml_utils import parse_yaml_node
+from bocas.artifacts.yaml_utils import parse_yaml_node
 
 
 class KerasHistory(Artifact):
@@ -9,10 +9,7 @@ class KerasHistory(Artifact):
 
     def __init__(self, history, **kwargs):
         super().__init__(**kwargs)
-        try:
-            self.history = history.history
-        except:
-            self.history = history
+        self.history = history
 
     @property
     def metrics(self):
@@ -21,7 +18,7 @@ class KerasHistory(Artifact):
 
     def to_yaml(self):
         config = super().to_yaml()
-        config.update({"history": self.history})
+        config.update({"history": self.history.history})
         return config
 
     @classmethod

@@ -4,6 +4,10 @@ import ml_collections
 from bocas.artifacts import Artifact, KerasHistory, Metrics
 
 
+def contains_only_registered_tags(yaml_str):
+    return not "!!python/object" in yaml_str
+
+
 def numpy_scalar_representer(dumper, data):
     return dumper.represent_scalar("tag:yaml.org,2002:float", str(data.item()))
 

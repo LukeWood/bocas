@@ -5,7 +5,7 @@ import pickle
 import yaml
 from bocas.artifacts import Artifact
 
-from .yamlify import (
+from bocas.yamlify import (
     configure_custom_yaml,
 )
 
@@ -60,11 +60,11 @@ class Result:
     @staticmethod
     def load(path):
         # Maintain backwards compatibility with pickled results
-        if os.path.exists(f"{path}results.p"):
-            with open(f"{path}results.p", "rb") as f:
+        if os.path.exists(os.path.join(path, "results.p")):
+            with open(os.path.join(path, "results.p"), "rb") as f:
                 result = pickle.load(f)
-        elif os.path.exists(f"{path}results.yaml"):
-            with open(f"{path}results.yaml", "r") as f:
+        elif os.path.exists(os.path.join(path, "results.yaml")):
+            with open(os.path.join(path, "results.yaml"), "r") as f:
                 result = yaml.load(f, Loader=yaml.FullLoader)
 
         return result

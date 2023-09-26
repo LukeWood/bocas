@@ -1,4 +1,4 @@
-from .yaml_utils import parse_yaml_node
+from bocas.artifacts.yaml_utils import parse_yaml_node
 
 
 class Artifact:

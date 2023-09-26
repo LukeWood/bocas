@@ -8,6 +8,7 @@ from termcolor import cprint
 import ml_collections
 
 from bocas.sweep import Sweep
+from bocas.yamlify import contains_only_registered_tags
 
 
 def _import_run_lib(path):
@@ -70,25 +71,32 @@ def run(path, config, artifact_dir="artifacts"):
         if result.config is None:
             result.config = config
 
-        result_dir = f"{artifact_dir}/{result.name}"
+        result_dir = os.path.join(artifact_dir, result.name)
         os.makedirs(result_dir, exist_ok=True)
 
         try:
-            # Dump results to yaml
-            serialized_result = yaml.dump(result, default_flow_style=False)
+            serialize_yaml(result, result_dir)
         except Exception as e:
             cprint(f"YAML serialization failed with error: {e}.", "red")
-            serialized_result = None
-
-        if serialized_result:
-            with open(f"{result_dir}/results.yaml", "w") as f:
-                f.write(serialized_result)
-        # If dumping to yaml fails, default to pickling
-        else:
             cprint("Defaulting to saving result as pickle.", "red")
-            with open(f"{result_dir}/results.p", "wb") as f:
-                pickle.dump(result, f)
+            fallback_to_pickle(result, result_dir)
 
         results.append(result)
 
     return results
+
+
+def serialize_yaml(result, result_dir):
+    # Dump results to yaml
+    serialized_result = yaml.dump(result, default_flow_style=False)
+    if not contains_only_registered_tags(serialized_result):
+        raise ValueError(f"YAML serialization contained unregistered tags")
+
+    with open(os.path.join(result_dir, "results.yaml"), "w") as f:
+        f.write(serialized_result)
+
+
+def fallback_to_pickle(result, result_dir):
+    # Save result as pickle
+    with open(os.path.join(result_dir, "results.p"), "wb") as f:
+        pickle.dump(result, f)
