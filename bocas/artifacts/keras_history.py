@@ -1,5 +1,6 @@
 from bocas.artifacts.artifact import Artifact
-from bocas.artifacts.yaml_utils import parse_yaml_node
+from bocas.yaml_utils import parse_yaml_node
+from tensorflow.keras.callbacks import History
 
 
 class KerasHistory(Artifact):
@@ -9,7 +10,15 @@ class KerasHistory(Artifact):
 
     def __init__(self, history, **kwargs):
         super().__init__(**kwargs)
-        self.history = history
+        if isinstance(history, History):
+            self.history = history.history
+        elif isinstance(history, dict):
+            self.history = history
+        else:
+            raise ValueError(
+                f"Expected `history` to be a `tensorflow.keras.callbacks.History` or a "
+                f"dictionary, instead got type {type(history)}."
+            )
 
     @property
     def metrics(self):
@@ -18,7 +27,7 @@ class KerasHistory(Artifact):
 
     def to_yaml(self):
         config = super().to_yaml()
-        config.update({"history": self.history.history})
+        config.update({"history": self.history})
         return config
 
     @classmethod

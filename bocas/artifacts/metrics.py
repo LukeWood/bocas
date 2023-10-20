@@ -1,5 +1,5 @@
 from bocas.artifacts.artifact import Artifact
-from .yaml_utils import parse_yaml_node
+from bocas.yaml_utils import parse_yaml_node
 
 
 class Metrics(Artifact):

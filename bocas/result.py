@@ -4,7 +4,6 @@ import os
 import pickle
 import yaml
 from bocas.artifacts import Artifact
-
 from bocas.yamlify import (
     configure_custom_yaml,
 )
